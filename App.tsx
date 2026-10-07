@@ -1,9 +1,9 @@
-import WelcomeScreen from "./src/screens/WelcomeScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import { View, StyleSheet } from "react-native";
 
 export default function App() {
   return (
-    <WelcomeScreen />
+    <HomeScreen />
   );
 }
 

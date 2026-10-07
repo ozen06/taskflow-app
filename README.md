@@ -10,6 +10,10 @@ Para hacer funcionar la aplicación en Expo, debes ejecutar:
 npx expo start
 ```
 
+## Screens
+
+Logre combinar dos screens a la vez, HomeScreen y ProfileScreen, dentro de ProfileScreen se encuentra el componente ProfileCard capaz de crear una tarjeta de perfil con avatar, nombre y rol de un usuario.
+
 ## Licencia
 
 Este proyecto está bajo la **Licencia MIT**.
