@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import ProfileCard from '../components/ProfileCard';
+import { lightTheme } from '../constants/theme';
 
 export default function ProfileScreen() {
     return (
@@ -20,7 +21,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 20,
         borderWidth: 2,
-        borderColor: "#9b9b9b",
-        shadowColor: "fff"
+        borderColor: lightTheme.border
     }
 });

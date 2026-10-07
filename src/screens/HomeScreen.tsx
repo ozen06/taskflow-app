@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import ProfileScreen from './ProfileScreen';
+import { lightTheme } from '../constants/theme';
 
 export default function HomeScreen() {
   return (
@@ -16,7 +17,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4338CA',
+    backgroundColor: lightTheme.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -24,11 +25,11 @@ const styles = StyleSheet.create({
     padding: 20
   },
   titulos: {
-    color: '#FFFFFF',
+    color: lightTheme.text,
     fontSize: 45
   },
   subtitulos: {
-    color: '#FFFFFF',
+    color: lightTheme.text,
     fontSize: 22
   }
 });

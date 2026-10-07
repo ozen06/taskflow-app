@@ -19,7 +19,7 @@ export default function ProfileCard({ name, role, imagen }: Props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 0,
+        flex: 1,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
