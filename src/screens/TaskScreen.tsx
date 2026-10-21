@@ -52,7 +52,8 @@ export default function AddTaskScreen() {
                 <TextInput
                     style={styles.title}
                     placeholder="Nombre de la tarea"
-                    autoCapitalize="sentences"
+                    autoCapitalize="characters"
+                    keyboardType="default"
                     value={onChangeText.taskName}
                     onChangeText={(text) => onChangeTextFunc("taskName", text)}
                 />
@@ -61,6 +62,8 @@ export default function AddTaskScreen() {
                     style={[styles.textInput, { fontSize: Math.min(width * 0.08, 19), margin: 10 }]}
                     placeholder="Descripcion "
                     multiline
+                    autoCapitalize="characters"
+                    keyboardType="default"
                     numberOfLines={3}
                     maxLength={40}
                     value={onChangeText.taskDescription}
