@@ -19,27 +19,26 @@ export default function ProfileCard({ name, role, imagen }: Props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
-    padding: 20
+        padding: 20
     },
     avatar: {
-        height: 150,
-        width: 150,
+        height: 110,
+        width: 110,
         borderRadius: 25,
         borderWidth: 2,
-        borderColor: "fff"
+        borderColor: "fff",
     },
     infoContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 25
+        padding: 10
     },
     nameText: {
-        fontSize: 45,
+        fontSize: 30,
         fontWeight: "bold",
         textAlign: "center"
     },
