@@ -48,14 +48,13 @@ export default function TaskScreen() {
         const types = ["taskName", "taskDescription"]
         for (let i = 0; i < types.length; i++) {
             onChangeTextFunc(types[i], "")
-        }
+        }  
     }
     return (
         <ScrollView
             style={styles.scrollContainer}
             keyboardShouldPersistTaps="handled"
         >
-
             <View style={styles.parameters}>
                 <Text style={styles.TextInput}>Tarea</Text>
                 <TextInput
