@@ -16,11 +16,9 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFFFFF',
+        height: 200,
+        width: 300,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 20,
-        borderWidth: 2,
-        borderColor: lightTheme.border
     }
 });
