@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 const options = ["Personal", "Hogar"];
 
-export default function AddTaskScreen() {
+export default function TaskScreen() {
     interface Task {
         taskName: string;
         taskDescription: string;
@@ -33,7 +33,7 @@ export default function AddTaskScreen() {
             [type]: content
         }))
     }
-    const handleSave = () => {
+    const handleAddTask = () => {
         let taskCopy = { ...onChangeText, createdAt: new Date() };
         setTaskList((prevstate) => [...prevstate, taskCopy])
         Alert.alert("Éxito", "Tarea capturada localmente")
@@ -98,7 +98,7 @@ export default function AddTaskScreen() {
                         let validation = validateForm()
                         return (
                             validation == true ?
-                                handleSave() : ""
+                                handleAddTask() : ""
                         )
                     }}>
                         <Text style={[styles.buttonText, { fontSize: 25 }]}>Crear tarea</Text>
