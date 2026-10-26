@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 import ProfileScreen from './ProfileScreen';
 import { lightTheme } from '../constants/theme';
-import AddTaskScreen from './AddTaskScreen';
+import TaskScreen from './TaskScreen';
 
 export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
       <View style={[{ margin: 5 }, styles.component]}>
-        <AddTaskScreen />
+        <TaskScreen />
       </View>
     </View>
   );
