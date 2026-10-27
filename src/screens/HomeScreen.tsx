@@ -1,12 +1,24 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import ProfileScreen from './ProfileScreen';
 import { lightTheme } from '../constants/theme';
 import TaskScreen from './TaskScreen';
 
 export default function HomeScreen() {
+  const user = "Enzo"
+  const imageProfile = "https://www.kindpng.com/picc/m/363-3638766_transparent-crash-bandicoot-profile-hd-png-download.png"
+  const colorCategory = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F3"];
 
   return (
     <View style={styles.container}>
+      {/* Parte superior interfaz */}
+      <View style={styles.viewUP}>
+        <View style={{ alignContent: "flex-start" }}>
+          <Text style={styles.welcomeText}>¡Hola, {user}!</Text>
+        </View>
+        <View style={{ alignContent: "flex-end" }}>
+          <Image style={styles.profileImage} source={{ uri: imageProfile }}></Image>
+        </View>
+      </View>
       <View style={[{ margin: 5 }, styles.component]}>
         <TaskScreen />
       </View>
@@ -35,6 +47,26 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 5,
     width: 300
+  },
+  viewUP: {
+    flexDirection: "row",
+    alignSelf: "stretch",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: 20,
+    paddingTop: 10,
+  },
+  welcomeText: {
+    color: "#070606",
+    fontSize: 35,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   titulos: {
     color: lightTheme.text,
