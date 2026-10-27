@@ -4,60 +4,70 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    SafeAreaViewBase
+    View
 } from 'react-native';
 
 
-const INITIAL_TASKS = [
-    { id: '1', title: 'Aprender FlatList', completed: false },
-    { id: '2', title: 'Configurar Navigation', completed: false },
-    { id: '3', title: 'Instalar Redux Toolkit', completed: false },
-];
+interface Task {
+    taskName: string;
+    taskDescription: string;
+    taskCategory: string;
+}
+interface TaskListProps {
+    taskList: (Task & { createdAt: Date })[];
+}
 
-export default function TaskDetail() {
-    const [tasks, setTasks] = useState(INITIAL_TASKS);
 
-    const toggleTask = (id: string) => {
-        setTasks((prevState) => prevState.map((elemento) => {
-            elemento.id == id ? { ...elemento, completed: true } : elemento
-            return elemento
-        }))
-    }
+export default function TaskDetail({ taskList }: TaskListProps & any) {
 
     return (
-        <SafeAreaViewBase style={styles.container}>
-            <Text style={styles.title}>TaskFlow List</Text>
-            <FlatList
-                data={tasks}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={[styles.item && item.completed == true ? { borderColor: "#f01d1d" } : { borderColor: "#fff" }]}
-                        onPress={() => toggleTask(item.id)}
-                    >
-                        <Text>{item.title}</Text>
-                    </TouchableOpacity>
-                )}
-            />
-        </SafeAreaViewBase>
+        <View style={styles.container}>
+            <View>
+                <FlatList
+                    data={taskList}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={[styles.item]}
+                            onPress={() => { }}
+                        >
+                            <View style={styles.rowCenter}>
+                                <TouchableOpacity>
+                                    <Text style={{ fontSize: 85 }}>◻</Text>
+                                </TouchableOpacity>
+                                <View style={{ padding: 20 }}>
+                                    <Text style={styles.title}>{item.taskName}</Text>
+                                    <Text style={styles.title}>{item.taskCategory}</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        </View>
     )
 
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingTop: 50,
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFF'
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
+        color: "#0f0000"
     },
     item: {
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#EEE',
+        padding: 20,
+        margin: 15,
+        borderRadius: 15,
+        borderWidth: 2,
     },
+    rowCenter: {
+        flexDirection: "row",
+        alignSelf: "stretch",
+        alignItems: "center",
+        justifyContent: "center"
+    }
 });

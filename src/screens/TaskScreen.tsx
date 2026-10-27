@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
-import TaskCreate from '../components/taskCreate';
-import { BlurView } from '@react-native-community/blur';
+import TaskCreate from '../components/TaskCreate';
+import TaskDetail from '../components/TaskDetail';
 const { width, height } = Dimensions.get('window');
 
 export default function TaskScreen() {
@@ -20,17 +20,9 @@ export default function TaskScreen() {
             >
                 <Text style={styles.title}>+</Text>
             </TouchableOpacity>
-
-            <BlurView
-                style={styles.absoluteBlur}
-                blurType="dark"      // Opciones: 'dark', 'light', 'extraDark'
-                blurAmount={10}      // Intensidad del difuminado (número entero)
-                reducedTransparencyFallbackColor="black" // Color de respaldo si el dispositivo no soporta blur nativo
-            >
-
-                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : ""}
-            </BlurView>
-
+            <View>
+                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : <TaskDetail taskList={taskList} />}
+            </View>
         </View>
     );
 }

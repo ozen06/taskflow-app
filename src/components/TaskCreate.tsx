@@ -185,5 +185,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: 'transparent',
         textAlign: 'center',
-    },
+    }
 });
