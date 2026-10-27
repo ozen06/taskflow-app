@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
-import { lightTheme } from '../constants/theme';
+import TaskCreate from '../components/taskCreate';
+import { BlurView } from '@react-native-community/blur';
 const { width, height } = Dimensions.get('window');
-
-const options = ["Personal", "Hogar"];
 
 export default function TaskScreen() {
     interface Task {
@@ -11,109 +10,28 @@ export default function TaskScreen() {
         taskDescription: string;
         taskCategory: string;
     }
-    const [onChangeText, setOnChangeText] = useState<Task>({ taskName: "", taskDescription: "", taskCategory: options[0] });
-    const [error, setError] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
     const [taskList, setTaskList] = useState<(Task & { createdAt: Date })[]>([]);
-    const [titleFocused, setTitleFocused] = useState(false);
-
-    const validateForm = (title: any) => {
-        let currentError = "";
-        if (onChangeText.taskName.length < 5 || title == "title") {
-            currentError = "title"
-            setError(currentError)
-        } else if (onChangeText.taskDescription.length < 10 || title == "description") {
-            currentError = "description"
-            setError(currentError)
-        } else {
-            setError("")
-            return true
-        }
-    }
-    const onChangeTextFunc = (type: string, content: string) => {
-        setOnChangeText((prevState) => ({
-            ...prevState,
-            [type]: content
-        }))
-        if (type == "taskName") {
-            content.length > 4 ? validateForm("title") : ""
-        } else {
-            content.length > 9 ? validateForm("description") : ""
-        }
-    }
-    const handleAddTask = () => {
-        let taskCopy = { ...onChangeText, createdAt: new Date() };
-        setTaskList((prevstate) => [...prevstate, taskCopy])
-        Alert.alert("Éxito", "Tarea capturada localmente")
-        console.log(taskList)
-        const types = ["taskName", "taskDescription"]
-        for (let i = 0; i < types.length; i++) {
-            onChangeTextFunc(types[i], "")
-        }  
-    }
     return (
-        <ScrollView
-            style={styles.scrollContainer}
-            keyboardShouldPersistTaps="handled"
-        >
-            <View style={styles.parameters}>
-                <Text style={styles.TextInput}>Tarea</Text>
-                <TextInput
-                    style={[styles.title, { borderWidth: 2, borderColor: error ? 'red' : titleFocused ? '#007AFF' : '#ccc' }]}
-                    placeholder="Nombre de la tarea"
-                    autoCapitalize="words"
-                    keyboardType="default"
-                    value={onChangeText.taskName}
-                    onChangeText={(text) => onChangeTextFunc("taskName", text)}
-                />
-                <Text style={styles.error}>{error == "title" ? "Introduce un nombre de tarea mayor a 5 caracteres" : ""}</Text>
-                <TextInput
-                    style={[styles.textInput, { fontSize: Math.min(width * 0.08, 19), margin: 10, borderWidth: 2, borderColor: error ? 'red' : titleFocused ? '#007AFF' : '#ccc' }]}
-                    placeholder="Descripcion "
-                    multiline
-                    autoCapitalize="words"
-                    keyboardType="default"
-                    numberOfLines={3}
-                    maxLength={40}
-                    value={onChangeText.taskDescription}
-                    onChangeText={(description) => onChangeTextFunc("taskDescription", description)}
-                />
-                <Text style={styles.error}>{error == "description" ? "Introduce una descripcion mayor a 10 caracteres" : ""}</Text>
-                <Text style={styles.TextInput}>Categoria</Text>
-                <View style={{ flexDirection: 'row', padding: 10 }}>
-                    {options.map((option, index) => {
-                        const isSelected = onChangeText.taskCategory == option;
+        <View>
+            <TouchableOpacity
+                style={modalVisible == false ? styles.modal : styles.modalOff}
+                onPress={() => { modalVisible == false ? setModalVisible(true) : setModalVisible(false) }}
+            >
+                <Text style={styles.title}>+</Text>
+            </TouchableOpacity>
 
-                        return (
-                            <Pressable
-                                key={`${option}-${isSelected ? 'active' : 'inactive'}`}
-                                onPress={() => {
-                                    onChangeTextFunc("taskCategory", option)
-                                }}
-                                style={[
-                                    { margin: 3, borderRadius: 15 },
-                                    isSelected ? styles.selected : { backgroundColor: '#f0f0f0' }
-                                ]}
-                            >
-                                <Text style={[styles.textInput, { fontSize: 16 }]}>
-                                    {option}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
-                </View>
-                <View style={styles.buttonWrapper}>
-                    <TouchableOpacity style={styles.blurContainer} onPress={() => {
-                        let validation = validateForm("")
-                        return (
-                            validation == true ?
-                                handleAddTask() : ""
-                        )
-                    }}>
-                        <Text style={[styles.buttonText, { fontSize: 25 }]}>Crear tarea</Text>
-                    </TouchableOpacity>
-                </View>
-            </View >
-        </ScrollView>
+            <BlurView
+                style={styles.absoluteBlur}
+                blurType="dark"      // Opciones: 'dark', 'light', 'extraDark'
+                blurAmount={10}      // Intensidad del difuminado (número entero)
+                reducedTransparencyFallbackColor="black" // Color de respaldo si el dispositivo no soporta blur nativo
+            >
+
+                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : ""}
+            </BlurView>
+
+        </View>
     );
 }
 const styles = StyleSheet.create({
@@ -136,7 +54,8 @@ const styles = StyleSheet.create({
         fontSize: Math.min(width * 0.08, 21),
         fontWeight: "500",
         textAlign: "center",
-        backgroundColor: 'rgba(255, 255, 255, 0.82)',
+        color: "#fff",
+        backgroundColor: 'rgb(255, 0, 0)',
         borderRadius: 15,
         padding: 20,
     },
@@ -182,4 +101,29 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         textAlign: 'center',
     },
+    modal: {
+        position: "absolute",
+        bottom: 0,
+        left: 250,
+        width: 85,
+        height: 100,
+        zIndex: 1000
+    },
+    modalOff: {
+        position: "absolute",
+        bottom: 500,
+        left: 250,
+        width: 85,
+        height: 100,
+        zIndex: 1000
+    },
+    absoluteBlur: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });

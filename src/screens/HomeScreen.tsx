@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 24,
     elevation: 5,
-    width: 300
+    width: 340
   },
   viewUP: {
     flexDirection: "row",
@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     color: "#070606",
-    fontSize: 35,
+    fontSize: 32,
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 10,
   },
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     borderRadius: 40,
   },
   titulos: {

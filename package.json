@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@react-native-community/blur": "^4.4.1",
     "expo": "~57.0.28",
+    "expo-blur": "~57.0.3",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",

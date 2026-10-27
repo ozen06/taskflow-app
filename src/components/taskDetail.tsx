@@ -2,10 +2,6 @@ import { useState } from 'react';
 import {
     StyleSheet,
     Text,
-<<<<<<< HEAD
-=======
-    View,
->>>>>>> eb520ca17fde102b4abfbcca83e4609ac807b12f
     FlatList,
     TouchableOpacity,
     SafeAreaViewBase
@@ -18,7 +14,7 @@ const INITIAL_TASKS = [
     { id: '3', title: 'Instalar Redux Toolkit', completed: false },
 ];
 
-export default function App() {
+export default function TaskDetail() {
     const [tasks, setTasks] = useState(INITIAL_TASKS);
 
     const toggleTask = (id: string) => {
