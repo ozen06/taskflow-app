@@ -2,10 +2,6 @@ import { useState } from 'react';
 import {
     StyleSheet,
     Text,
-<<<<<<< HEAD
-=======
-    View,
->>>>>>> eb520ca17fde102b4abfbcca83e4609ac807b12f
     FlatList,
     TouchableOpacity,
     SafeAreaViewBase
