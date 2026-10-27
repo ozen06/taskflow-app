@@ -11,15 +11,17 @@ export default function TaskScreen() {
         taskDescription: string;
         taskCategory: string;
     }
-    const [onChangeText, setOnChangeText] = useState<Task>({ taskName: "", taskDescription: "", taskCategory: "Personal" });
+    const [onChangeText, setOnChangeText] = useState<Task>({ taskName: "", taskDescription: "", taskCategory: options[0] });
     const [error, setError] = useState("");
     const [taskList, setTaskList] = useState<(Task & { createdAt: Date })[]>([]);
-    const validateForm = () => {
+    const [titleFocused, setTitleFocused] = useState(false);
+
+    const validateForm = (title: any) => {
         let currentError = "";
-        if (onChangeText.taskName.length < 5) {
+        if (onChangeText.taskName.length < 5 || title == "title") {
             currentError = "title"
             setError(currentError)
-        } else if (onChangeText.taskDescription.length < 10) {
+        } else if (onChangeText.taskDescription.length < 10 || title == "description") {
             currentError = "description"
             setError(currentError)
         } else {
@@ -32,14 +34,21 @@ export default function TaskScreen() {
             ...prevState,
             [type]: content
         }))
+        if (type == "taskName") {
+            content.length > 4 ? validateForm("title") : ""
+        } else {
+            content.length > 9 ? validateForm("description") : ""
+        }
     }
     const handleAddTask = () => {
         let taskCopy = { ...onChangeText, createdAt: new Date() };
         setTaskList((prevstate) => [...prevstate, taskCopy])
         Alert.alert("Éxito", "Tarea capturada localmente")
         console.log(taskList)
-        setOnChangeText({ taskName: "", taskDescription: "", taskCategory: "Personal" })
-        return
+        const types = ["taskName", "taskDescription"]
+        for (let i = 0; i < types.length; i++) {
+            onChangeTextFunc(types[i], "")
+        }  
     }
     return (
         <ScrollView
@@ -49,26 +58,26 @@ export default function TaskScreen() {
             <View style={styles.parameters}>
                 <Text style={styles.TextInput}>Tarea</Text>
                 <TextInput
-                    style={styles.title}
+                    style={[styles.title, { borderWidth: 2, borderColor: error ? 'red' : titleFocused ? '#007AFF' : '#ccc' }]}
                     placeholder="Nombre de la tarea"
-                    autoCapitalize="characters"
+                    autoCapitalize="words"
                     keyboardType="default"
                     value={onChangeText.taskName}
                     onChangeText={(text) => onChangeTextFunc("taskName", text)}
                 />
                 <Text style={styles.error}>{error == "title" ? "Introduce un nombre de tarea mayor a 5 caracteres" : ""}</Text>
                 <TextInput
-                    style={[styles.textInput, { fontSize: Math.min(width * 0.08, 19), margin: 10 }]}
+                    style={[styles.textInput, { fontSize: Math.min(width * 0.08, 19), margin: 10, borderWidth: 2, borderColor: error ? 'red' : titleFocused ? '#007AFF' : '#ccc' }]}
                     placeholder="Descripcion "
                     multiline
-                    autoCapitalize="characters"
+                    autoCapitalize="words"
                     keyboardType="default"
                     numberOfLines={3}
                     maxLength={40}
                     value={onChangeText.taskDescription}
                     onChangeText={(description) => onChangeTextFunc("taskDescription", description)}
                 />
-                <Text style={styles.error}>{error == "description" ? "Introduce una descripcion mayor a 30 caracteres" : ""}</Text>
+                <Text style={styles.error}>{error == "description" ? "Introduce una descripcion mayor a 10 caracteres" : ""}</Text>
                 <Text style={styles.TextInput}>Categoria</Text>
                 <View style={{ flexDirection: 'row', padding: 10 }}>
                     {options.map((option, index) => {
@@ -78,7 +87,7 @@ export default function TaskScreen() {
                             <Pressable
                                 key={`${option}-${isSelected ? 'active' : 'inactive'}`}
                                 onPress={() => {
-                                    onChangeTextFunc("taskCategory", option);
+                                    onChangeTextFunc("taskCategory", option)
                                 }}
                                 style={[
                                     { margin: 3, borderRadius: 15 },
@@ -94,7 +103,7 @@ export default function TaskScreen() {
                 </View>
                 <View style={styles.buttonWrapper}>
                     <TouchableOpacity style={styles.blurContainer} onPress={() => {
-                        let validation = validateForm()
+                        let validation = validateForm("")
                         return (
                             validation == true ?
                                 handleAddTask() : ""
@@ -141,7 +150,7 @@ const styles = StyleSheet.create({
     },
     selected: {
         backgroundColor: '#ffffff',
-        borderColor: '#ff0000',
+        borderColor: '#007AFF',
         borderWidth: 3,
         borderRadius: 15
     },
