@@ -19,7 +19,6 @@ export default function HomeScreen() {
         </View>
       </View>
       <View style={[{ margin: 5 }, styles.component]}>
-        <Text style={{ fontSize: 35, padding: 10}}>Tareas</Text>
         <TaskScreen />
       </View>
     </View>

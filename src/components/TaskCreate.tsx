@@ -45,10 +45,9 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
         }
     }
     const handleAddTask = () => {
-        let taskCopy = { ...onChangeText, createdAt: new Date() };
-        setTaskList((prevstate: any) => [...prevstate, taskCopy])
+        let taskCopy = { ...onChangeText, createdAt: new Date(), active: false };
+        setTaskList((prevstate: any) => [...(prevstate || []), taskCopy])
         Alert.alert("Éxito", "Tarea capturada localmente")
-        console.log(taskList)
         const types = ["taskName", "taskDescription"]
         for (let i = 0; i < types.length; i++) {
             onChangeTextFunc(types[i], "")
@@ -61,8 +60,6 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
                         return { ...task, colorCategory: colors[0] };
                     } else if (task.taskCategory === "Hogar") {
                         return { ...task, colorCategory: colors[1] };
-                    } else {
-                        return { ...task, colorCategory: colors[2] };
                     }
                     return task;
                 })
@@ -81,8 +78,9 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
                     placeholder="Nombre de la tarea"
                     autoCapitalize="words"
                     keyboardType="default"
+                    maxLength={21}
                     value={onChangeText.taskName}
-                    onChangeText={(text) => (onChangeText.taskName.length >= 21 ? "" : onChangeTextFunc("taskName", text))}
+                    onChangeText={(text) => onChangeTextFunc("taskName", text)}
                 />
                 <Text style={styles.error}>{error == "title" ? "Introduce un nombre de tarea mayor a 5 caracteres" : ""}</Text>
                 <TextInput
@@ -91,7 +89,7 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
                     multiline
                     autoCapitalize="words"
                     keyboardType="default"
-                    numberOfLines={3}
+                    numberOfLines={2}
                     maxLength={40}
                     value={onChangeText.taskDescription}
                     onChangeText={(description) => onChangeTextFunc("taskDescription", description)}
@@ -125,7 +123,8 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
                         let validation = validateForm("")
                         return (
                             validation == true ?
-                                handleAddTask() : ""
+                                handleAddTask() : "",
+                            console.log(taskList)
                         )
                     }}>
                         <Text style={[styles.buttonText, { fontSize: 25 }]}>Crear tarea</Text>

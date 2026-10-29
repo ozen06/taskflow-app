@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
 import TaskCreate from '../components/TaskCreate';
-import TaskDetail from '../components/TaskDetail';
+import TaskList from '../components/TaskList';
 const { width, height } = Dimensions.get('window');
 
 export default function TaskScreen() {
@@ -22,7 +22,7 @@ export default function TaskScreen() {
                 <Text style={styles.title}>+</Text>
             </TouchableOpacity>
             <View>
-                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : <TaskDetail taskList={taskList} />}
+                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : <TaskList setTaskList={setTaskList} taskList={taskList} />}
             </View>
         </View>
     );
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     modal: {
         position: "absolute",
         bottom: 0,
-        left: 250,
+        left: 290,
         width: 85,
         height: 100,
         zIndex: 1000
