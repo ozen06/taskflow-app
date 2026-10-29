@@ -53,6 +53,21 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
         for (let i = 0; i < types.length; i++) {
             onChangeTextFunc(types[i], "")
         }
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F3"];
+        for (let i = 0; i < colors.length; i++) {
+            setTaskList((prevState) =>
+                prevState.map((task) => {
+                    if (task.taskCategory === "Personal") {
+                        return { ...task, colorCategory: colors[0] };
+                    } else if (task.taskCategory === "Hogar") {
+                        return { ...task, colorCategory: colors[1] };
+                    } else {
+                        return { ...task, colorCategory: colors[2] };
+                    }
+                    return task;
+                })
+            );
+        }
     }
     return (
         <ScrollView
@@ -67,7 +82,7 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
                     autoCapitalize="words"
                     keyboardType="default"
                     value={onChangeText.taskName}
-                    onChangeText={(text) => onChangeTextFunc("taskName", text)}
+                    onChangeText={(text) => (onChangeText.taskName.length >= 21 ? "" : onChangeTextFunc("taskName", text))}
                 />
                 <Text style={styles.error}>{error == "title" ? "Introduce un nombre de tarea mayor a 5 caracteres" : ""}</Text>
                 <TextInput

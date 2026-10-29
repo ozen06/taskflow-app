@@ -6,7 +6,6 @@ import TaskScreen from './TaskScreen';
 export default function HomeScreen() {
   const user = "Enzo"
   const imageProfile = "https://www.kindpng.com/picc/m/363-3638766_transparent-crash-bandicoot-profile-hd-png-download.png"
-  const colorCategory = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F3"];
 
   return (
     <View style={styles.container}>
@@ -15,11 +14,12 @@ export default function HomeScreen() {
         <View style={{ alignContent: "flex-start" }}>
           <Text style={styles.welcomeText}>¡Hola, {user}!</Text>
         </View>
-        <View style={{ alignContent: "flex-end" }}>
+        <View style={{ alignContent: "flex-start" }}>
           <Image style={styles.profileImage} source={{ uri: imageProfile }}></Image>
         </View>
       </View>
       <View style={[{ margin: 5 }, styles.component]}>
+        <Text style={{ fontSize: 35, padding: 10}}>Tareas</Text>
         <TaskScreen />
       </View>
     </View>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 24,
     elevation: 5,
-    width: 340
+    width: 395
   },
   viewUP: {
     flexDirection: "row",
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 20,
     paddingTop: 10,
+    width: 395
   },
   welcomeText: {
     color: "#070606",

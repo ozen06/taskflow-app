@@ -12,6 +12,7 @@ export default function TaskScreen() {
     }
     const [modalVisible, setModalVisible] = useState(false);
     const [taskList, setTaskList] = useState<(Task & { createdAt: Date })[]>([]);
+
     return (
         <View>
             <TouchableOpacity
