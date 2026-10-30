@@ -17,11 +17,11 @@ interface TaskListProps {
     setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date })[]>>;
 }
 
-export default function TaskList({ taskList, setTaskList }: TaskListProps & any) {
+export default function TaskList({ taskList, setTaskList }: TaskListProps) {
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 35, paddingLeft: 10 }}>Tareas</Text>
-            {taskList[0] ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
+            {taskList.length >= 1 ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
         </View >
     )
 }
@@ -35,18 +35,27 @@ function EmptyTask() {
 }
 
 function TaskFlatlist({ taskList, setTaskList }: TaskListProps & any) {
+    const [select, setSelect] = useState("");
     return (
-        <View style={{height: 415}}>
+        <View style={{ height: 415 }}>
             <FlatList
                 data={taskList}
                 keyExtractor={(item) => item.createdAt}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto" }]}
+                        style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto" }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
                         onPress={() => setTaskList((prevstate: any) => {
                             return prevstate.map((elemento: any) => {
-                                if (elemento === item) {
-                                    return { ...elemento, active: !elemento.active };
+                                if (select == "" || select == item.taskName) {
+                                    if (elemento === item) {
+                                        if (elemento.active == false) {
+                                            setSelect(item.taskName)
+                                            return { ...elemento, active: !elemento.active };
+                                        } else if (elemento.active == true) {
+                                            setSelect("")
+                                            return { ...elemento, active: !elemento.active };
+                                        }
+                                    }
                                 }
                                 return elemento;
                             })
@@ -106,7 +115,7 @@ const styles = StyleSheet.create({
     rowBeetween: {
         flex: 1,
         flexDirection: "row",
-        alignItems: "flex-end"
+        alignItems: "center"
     },
     centerContainer: {
         flex: 1,
