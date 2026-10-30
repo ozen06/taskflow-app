@@ -14,13 +14,13 @@ interface Task {
 }
 interface TaskListProps {
     taskList: (Task & { createdAt: Date })[];
-    setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date })[]>>;
+    setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>;
 }
 
 export default function TaskList({ taskList, setTaskList }: TaskListProps) {
     return (
         <View style={styles.container}>
-            <Text style={{ fontSize: 35, paddingLeft: 10 }}>Tareas</Text>
+            <Text style={{ fontSize: 35, paddingLeft: 10 }}>Mis tareas</Text>
             {taskList.length >= 1 ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
         </View >
     )
@@ -43,7 +43,7 @@ function TaskFlatlist({ taskList, setTaskList }: TaskListProps & any) {
                 keyExtractor={(item) => item.createdAt}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto" }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
+                        style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto", margin: 15 }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
                         onPress={() => setTaskList((prevstate: any) => {
                             return prevstate.map((elemento: any) => {
                                 if (select == "" || select == item.taskName) {
@@ -70,7 +70,7 @@ function TaskFlatlist({ taskList, setTaskList }: TaskListProps & any) {
                                 {item.active == true ? <Text style={styles.title}>{item.taskDescription}</Text> : ""}
                                 <View style={[styles.rowBeetween, { margin: 10 }]}>
                                     <View style={{ justifyContent: "flex-start", padding: 5 }}>
-                                        <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[1].substring(0, 8)}</Text>
+                                        <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[0].substring(1)}</Text>
                                     </View>
                                     <Text style={[styles.subTitle, { backgroundColor: "#d0d0d19f", borderColor: "#d0d0d19f", borderWidth: 3, borderRadius: 6 }]}>{item.taskCategory}</Text>
                                 </View>

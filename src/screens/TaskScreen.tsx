@@ -11,7 +11,7 @@ export default function TaskScreen() {
         taskCategory: string;
     }
     const [modalVisible, setModalVisible] = useState(false);
-    const [taskList, setTaskList] = useState<(Task & { createdAt: Date })[]>([]);
+    const [taskList, setTaskList] = useState<(Task & { createdAt: Date, active: boolean })[]>([]);
 
     return (
         <View>
@@ -19,7 +19,7 @@ export default function TaskScreen() {
                 style={modalVisible == false ? styles.modal : styles.modalOff}
                 onPress={() => { modalVisible == false ? setModalVisible(true) : setModalVisible(false) }}
             >
-                <Text style={styles.title}>+</Text>
+                <Text style={[styles.title, {justifyContent: "center"}]}>{modalVisible == false ? "+" : "Atras"} </Text>
             </TouchableOpacity>
             <View>
                 {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : <TaskList setTaskList={setTaskList} taskList={taskList} />}
@@ -98,16 +98,19 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         left: 290,
-        width: 85,
+        width: 95,
         height: 100,
+        textAlign: "center",
+        justifyContent: "center",
         zIndex: 1000
     },
     modalOff: {
         position: "absolute",
         bottom: 500,
         left: 250,
-        width: 85,
+        width: 95,
         height: 100,
+        justifyContent: "center",
         zIndex: 1000
     },
     absoluteBlur: {
