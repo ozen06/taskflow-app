@@ -21,7 +21,7 @@ export default function TaskList({ taskList, setTaskList }: TaskListProps) {
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 35, paddingLeft: 10 }}>Mis tareas</Text>
-            {taskList.length >= 1 ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
+            {taskList.length > 0 ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
         </View >
     )
 }
@@ -29,7 +29,7 @@ export default function TaskList({ taskList, setTaskList }: TaskListProps) {
 function EmptyTask() {
     return (
         <View>
-            <Text style={[styles.title, styles.centerContainer, { textAlign: "center", textAlignVertical: "center" }]}>No hay tareas</Text>
+            <Text style={[styles.title, { textAlign: "center", paddingTop: 170, textAlignVertical: "bottom" }]}>No hay tareas, Crea una.</Text>
         </View>
     )
 }
