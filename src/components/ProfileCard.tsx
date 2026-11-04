@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
 
 interface Props {
     name: string, role: string, imagen: string
@@ -9,20 +9,23 @@ export default function ProfileCard({ name, role, imagen }: Props) {
     return (
         <View style={styles.container}>
             <Image style={styles.avatar} source={{ uri: imagen }}></Image>
-            <View style={styles.infoContainer}>
+            <View>
                 <Text style={styles.nameText}>{name}</Text>
                 <Text style={styles.roleText}>{role}</Text>
             </View>
-        </View>
+        </View >
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20
+        alignContent: "center",
+        alignSelf: "center",
+        padding: 20,
+        height: 1000
     },
     avatar: {
         height: 110,
@@ -31,19 +34,13 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: "fff",
     },
-    infoContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 10
+    roleText: {
+        fontSize: 20,
+        textAlign: "center"
     },
     nameText: {
         fontSize: 30,
         fontWeight: "bold",
-        textAlign: "center"
-    },
-    roleText: {
-        fontSize: 20,
         textAlign: "center"
     }
 });

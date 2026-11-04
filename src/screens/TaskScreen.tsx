@@ -1,33 +1,50 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
-import TaskCreate from '../components/TaskCreate';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import TaskCreate, { Task } from '../components/TaskCreate';
 import TaskList from '../components/TaskList';
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+type TypesEmpty = {
+    textEmpty: string;
+}
 
 export default function TaskScreen() {
-    interface Task {
-        taskName: string;
-        taskDescription: string;
-        taskCategory: string;
-    }
     const [modalVisible, setModalVisible] = useState(false);
-    const [taskList, setTaskList] = useState<(Task & { createdAt: Date, active: boolean })[]>([]);
-
+    const [taskList, setTaskList] = useState<Task[]>([]);
+    const [taskCompleted, setCompleted] = useState<Task[]>([]);
     return (
         <View>
             <TouchableOpacity
                 style={modalVisible == false ? styles.modal : styles.modalOff}
-                onPress={() => { modalVisible == false ? setModalVisible(true) : setModalVisible(false) }}
+                onPress={() => { setModalVisible(!modalVisible) }}
             >
-                <Text style={[styles.title, {justifyContent: "center"}]}>{modalVisible == false ? "+" : "Atras"} </Text>
+                <Text style={[styles.buttonCreate, { justifyContent: "center" }]}>{modalVisible == false ? "+" : "Atras"} </Text>
             </TouchableOpacity>
-            <View>
-                {modalVisible ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : <TaskList setTaskList={setTaskList} taskList={taskList} />}
-            </View>
+            <View style={styles.container} >
+                {modalVisible == true ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : taskList.length > 0 ? <TaskList setTaskList={setTaskList} TaskList={taskList} taskCompleted={taskCompleted} setTaskCompleted={setCompleted} type={"TaskList"} /> : <EmptyTask textEmpty={"No hay tareas, Crea una."} />}
+            </View >
+            <View style={[styles.container, { marginTop: 15 }]}>
+                {modalVisible == true ? "" : taskCompleted.length > 0 ? <TaskList setTaskList={setTaskList} TaskList={taskList} taskCompleted={taskCompleted} setTaskCompleted={setCompleted} type={"TaskListCompleted"} /> : <EmptyTask textEmpty={"Todavia no hay tareas completadas!"} />}
+            </View >
         </View>
     );
 }
+
+
+function EmptyTask({ textEmpty }: TypesEmpty) {
+    return (
+        <View>
+            <Text style={[styles.title, { textAlign: "center", textAlignVertical: "bottom" }]}>{textEmpty}</Text>
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
+    container: {
+        borderRadius: 28,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.65)',
+    },
     scrollContainer: {
         flexGrow: 1
     },
@@ -48,9 +65,18 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         textAlign: "center",
         color: "#fff",
-        backgroundColor: 'rgb(255, 0, 0)',
         borderRadius: 15,
         padding: 20,
+    },
+    buttonCreate: {
+        backgroundColor: "#ce2a2a",
+        fontSize: Math.min(width * 0.08, 21),
+        fontWeight: "500",
+        textAlign: "center",
+        color: "#fff",
+        borderRadius: 15,
+        padding: 20,
+
     },
     textInput: {
         fontWeight: "600",

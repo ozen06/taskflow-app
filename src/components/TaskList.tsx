@@ -1,85 +1,106 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Task } from './TaskCreate';
 import {
     StyleSheet,
     Text,
-    FlatList,
     TouchableOpacity,
-    View
+    View,
+    FlatList
 } from 'react-native';
+import Feather from '@expo/vector-icons/Feather';
 
-interface Task {
-    taskName: string;
-    taskDescription: string;
-    taskCategory: string;
-}
-interface TaskListProps {
-    taskList: (Task & { createdAt: Date })[];
+export interface TaskListProps2 {
+    type: string;
+    TaskList: (Task & { createdAt: Date, active: boolean })[];
     setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>;
+    taskCompleted: (Task & { createdAt: Date, active: boolean })[];
+    setTaskCompleted: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>
 }
 
-export default function TaskList({ taskList, setTaskList }: TaskListProps) {
-    return (
-        <View style={styles.container}>
-            <Text style={{ fontSize: 35, paddingLeft: 10 }}>Mis tareas</Text>
-            {taskList.length > 0 ? <TaskFlatlist setTaskList={setTaskList} taskList={taskList} /> : <EmptyTask />}
-        </View >
-    )
-}
-
-function EmptyTask() {
-    return (
-        <View>
-            <Text style={[styles.title, { textAlign: "center", paddingTop: 170, textAlignVertical: "bottom" }]}>No hay tareas, Crea una.</Text>
-        </View>
-    )
-}
-
-function TaskFlatlist({ taskList, setTaskList }: TaskListProps & any) {
+export default function TaskList({ TaskList, setTaskList, taskCompleted, setTaskCompleted, type }: TaskListProps2 & any) {
     const [select, setSelect] = useState("");
+    let Array = type == "TaskList" ? TaskList : taskCompleted
+    let setArray = type == "TaskList" ? setTaskList : setTaskCompleted
+    const taskCompletedFunction = (item: any) => {
+        const ArrayAdd = type == "TaskList" ? taskCompleted : TaskList
+        let ArrayDelete = type == "TaskList" ? TaskList : taskCompleted;
+        let setArrayAdd = type == "TaskList" ? setTaskCompleted : setTaskList
+        let setArrayDelete = type == "TaskList" ? setTaskList : setTaskCompleted
+        const search = ArrayAdd.find((elemento: any) => elemento.title == item.title)
+        if (search) {
+            return
+        } else {
+            setArrayAdd((prevstate: any) => {
+                return [...prevstate, item]
+            });
+            const search = ArrayDelete.find((elemento: any) => elemento.title == item.title)
+            if (search) {
+                setArrayDelete((prevstate: any) => {
+                    return prevstate.filter((element: any) => element.title !== item.title)
+                });
+            } else {
+                return
+            }
+        }
+    }
+
     return (
-        <View style={{ height: 415 }}>
-            <FlatList
-                data={taskList}
-                keyExtractor={(item) => item.createdAt}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto", margin: 15 }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
-                        onPress={() => setTaskList((prevstate: any) => {
-                            return prevstate.map((elemento: any) => {
-                                if (select == "" || select == item.taskName) {
-                                    if (elemento === item) {
-                                        if (elemento.active == false) {
-                                            setSelect(item.taskName)
-                                            return { ...elemento, active: !elemento.active };
-                                        } else if (elemento.active == true) {
-                                            setSelect("")
-                                            return { ...elemento, active: !elemento.active };
-                                        }
+        <FlatList
+            style={{ height: 415 }}
+            data={Array}
+            keyExtractor={(item) => item.createdAt}
+            ListHeaderComponent={
+                <View>
+                    <Text style={{ fontSize: 35, paddingLeft: 10, color: "#fff" }}>{type == "TaskList" ? "Mis tareas" : "Tareas completadas"}</Text>
+                </View >
+            }
+            renderItem={({ item }) => (
+                <TouchableOpacity
+                    style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto", margin: 15 }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
+                    onPress={() => setArray((prevstate: any) => {
+                        return prevstate.map((elemento: any) => {
+                            if (select == "" || select == item.taskName) {
+                                if (elemento === item) {
+                                    if (elemento.active == false) {
+                                        setSelect(item.taskName)
+                                        return { ...elemento, active: !elemento.active };
+                                    } else if (elemento.active == true) {
+                                        setSelect("")
+                                        return { ...elemento, active: !elemento.active };
                                     }
                                 }
-                                return elemento;
-                            })
-                        })}
-                    >
-                        <View style={styles.rowCenter}>
-                            <TouchableOpacity >
-                                <Text style={{ fontSize: 55 }}>◻</Text>
-                            </TouchableOpacity>
-                            <View style={{ padding: 10, width: "85%" }}>
-                                <Text style={styles.title}>{item.taskName}</Text>
-                                {item.active == true ? <Text style={styles.title}>{item.taskDescription}</Text> : ""}
-                                <View style={[styles.rowBeetween, { margin: 10 }]}>
-                                    <View style={{ justifyContent: "flex-start", padding: 5 }}>
-                                        <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[0].substring(1)}</Text>
-                                    </View>
-                                    <Text style={[styles.subTitle, { backgroundColor: "#d0d0d19f", borderColor: "#d0d0d19f", borderWidth: 3, borderRadius: 6 }]}>{item.taskCategory}</Text>
+                            }
+                            return elemento;
+                        })
+                    })}
+                >
+                    <View style={styles.rowCenter}>
+                        <TouchableOpacity onPress={() => taskCompletedFunction(item)}>
+                            <View style={{ padding: 10, paddingTop: 23, margin: 4, justifyContent: "center", alignItems: "center", alignContent: "center", alignSelf: "center" }}>
+                                {type == "TaskList" ? <Icons iconName="square" /> : <Icons iconName="check-square" />}
+                            </View>
+                        </TouchableOpacity>
+                        <View style={{ padding: 10, width: "85%" }}>
+                            <Text style={styles.title}>{item.title}</Text>
+                            {item.active == true ? <Text style={styles.title}>{item.description}</Text> : ""}
+                            <View style={[styles.rowBeetween, { margin: 10 }]}>
+                                <View style={{ justifyContent: "flex-start", padding: 5 }}>
+                                    <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[0].substring(1)}</Text>
                                 </View>
+                                <Text style={[styles.subTitle, { backgroundColor: "#d0d0d19f", borderColor: "#d0d0d19f", borderWidth: 3, borderRadius: 6 }]}>{item.category}</Text>
                             </View>
                         </View>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
+                    </View>
+                </TouchableOpacity>
+            )
+            }
+        />
+    )
+}
+
+function Icons({ iconName }: any) {
+    return (
+        <Feather name={iconName} size={34} color="black" />
     )
 }
 

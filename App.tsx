@@ -1,9 +1,10 @@
+import AppNavigator from "./src/navigation/AppNavigator";
 import HomeScreen from "./src/screens/HomeScreen";
 import { View, StyleSheet } from "react-native";
 
 export default function App() {
   return (
-    <HomeScreen />
+    <AppNavigator />
   );
 }
 
