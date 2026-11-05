@@ -3,13 +3,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "../screens/HomeScreen";
 import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "../screens/ProfileScreen";
-import TaskScreen from "../screens/TaskScreen";
-
+import { Task } from "react-native";
 
 export type RootTabParamList = {
-  HomeTab: undefined;
-  ProfileTab: undefined;
-  CalendarTab: undefined;
+  HomeTab: {
+    taskListState?: Task[];
+    setTaskListState?: React.Dispatch<React.SetStateAction<Task[]>>; 
+  }
+  ProfileTab: {
+    taskCreated?: number;
+    taskCompleted?: number;
+  };
 }
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -31,8 +35,6 @@ export default function AppNavigator() {
               iconName = 'list-outline';
             } else if (route.name === 'ProfileTab') {
               iconName = 'person-outline';
-            } else if (route.name === 'CalendarTab') {
-              iconName = "calendar-outline";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;

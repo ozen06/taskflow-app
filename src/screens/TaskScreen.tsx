@@ -1,19 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import TaskCreate, { Task } from '../components/TaskCreate';
 import TaskList from '../components/TaskList';
+import { lightTheme } from '../constants/theme';
 const { width } = Dimensions.get('window');
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TasksStackParamList } from '../navigation/TasksStack';
 
 type TypesEmpty = {
     textEmpty: string;
 }
+type NavigationProp = NativeStackNavigationProp<TasksStackParamList>;
 
 export default function TaskScreen() {
     const [modalVisible, setModalVisible] = useState(false);
     const [taskList, setTaskList] = useState<Task[]>([]);
     const [taskCompleted, setCompleted] = useState<Task[]>([]);
+    const navigation = useNavigation<NavigationProp>();
+    useEffect(() => {
+        if (taskList.length >= 0) {
+            navigation.navigate("ProfileTab", { taskCreated: (taskList.length || 0), taskCompleted: (taskCompleted.length || 0) })
+        }
+    }, [taskList.length]);
     return (
-        <View>
+        < View >
             <TouchableOpacity
                 style={modalVisible == false ? styles.modal : styles.modalOff}
                 onPress={() => { setModalVisible(!modalVisible) }}
@@ -26,7 +37,7 @@ export default function TaskScreen() {
             <View style={[styles.container, { marginTop: 15 }]}>
                 {modalVisible == true ? "" : taskCompleted.length > 0 ? <TaskList setTaskList={setTaskList} TaskList={taskList} taskCompleted={taskCompleted} setTaskCompleted={setCompleted} type={"TaskListCompleted"} /> : <EmptyTask textEmpty={"Todavia no hay tareas completadas!"} />}
             </View >
-        </View>
+        </View >
     );
 }
 
@@ -43,7 +54,7 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 28,
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.65)',
+        borderColor: lightTheme.border
     },
     scrollContainer: {
         flexGrow: 1
@@ -64,7 +75,7 @@ const styles = StyleSheet.create({
         fontSize: Math.min(width * 0.08, 21),
         fontWeight: "500",
         textAlign: "center",
-        color: "#fff",
+        color: lightTheme.text,
         borderRadius: 15,
         padding: 20,
     },
@@ -73,7 +84,7 @@ const styles = StyleSheet.create({
         fontSize: Math.min(width * 0.08, 21),
         fontWeight: "500",
         textAlign: "center",
-        color: "#fff",
+        color: lightTheme.text,
         borderRadius: 15,
         padding: 20,
 

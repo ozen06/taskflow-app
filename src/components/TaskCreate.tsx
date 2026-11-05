@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
 import { lightTheme } from '../constants/theme';
-import { useNavigation } from '@react-navigation/native';
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 
 export interface Task {
@@ -22,7 +21,10 @@ export interface TaskListProps {
     setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>;
 }
 
-export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
+let i = 0;
+
+
+export default function TaskCreate({ setTaskList, taskList }: TaskListProps) {
     const options = ["Personal", "Hogar"];
     const date = new Date()
     const [onChangeText, setOnChangeText] = useState<Task>({ id: 0, title: "", description: "", category: options[0], createdAt: date, active: false });
@@ -35,14 +37,8 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
         const conditionTrueTitle = onChangeText.title.length >= 5
         if (onChangeText.title.length < 5) {
             setErrorTitle(true)
-            if (onChangeText.description.length < 10) {
-                setErrorDescription(true)
-            }
         } else if (onChangeText.description.length < 10) {
             setErrorDescription(true)
-            if (onChangeText.title.length < 5) {
-                setErrorTitle(true)
-            }
         } else if (conditionTrueTitle == true && conditionTrueDescription == true) {
             setErrorDescription(false)
             setErrorTitle(false)
@@ -58,18 +54,18 @@ export default function TaskCreate({ taskList, setTaskList }: TaskListProps) {
     const handleAddTask = () => {
         const validation = validateForm()
         if (validation == true) {
-            let taskCopy = { ...onChangeText, createdAt: new Date(), active: false };
+            let taskCopy = { ...onChangeText, createdAt: new Date(), active: false, id: i };
+            i += 1;
             setTaskList((prevstate: any) => [...(prevstate || []), taskCopy])
-            Alert.alert("Éxito", "Tarea capturada localmente")
             const types = ["title", "description"]
-            let id = 0;
+            Alert.alert("Tarea creada con exito")
             for (let i = 0; i < types.length; i++) {
                 onChangeTextFunc(types[i], "")
             }
             const colors = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F3"];
-            for (let i = 0; i < colors.length; i++) {
-                setTaskList((prevState) =>
-                    prevState.map((task) => {
+            for (let i = 0; i < taskList.length; i++) {
+                setTaskList((prevState: any) =>
+                    prevState.map((task: any) => {
                         // Borro todas las tareas que estan detalladas
                         if (task.active == true) {
                             return { ...task, active: !task.active };
@@ -216,5 +212,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: 'transparent',
         textAlign: 'center',
+        borderWidth: 3,
+        padding: 8,
+        borderRadius: 12,
+        borderColor: lightTheme.border
     }
 });

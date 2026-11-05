@@ -1,48 +1,84 @@
 import { StyleSheet, Text, View } from 'react-native';
-import ProfileCard from '../components/ProfileCard';
 import { ImageBackground } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { TasksStackParamList } from '../navigation/TasksStack';
+import ProfileCard from '../components/ProfileCard'; 
+
+type RouterProp = RouteProp<TasksStackParamList>;
 
 export default function ProfileScreen() {
-    return ( 
+    const route = useRoute<RouterProp>();
+    const taskCreated = route.params?.taskCreated;
+    const taskCompleted = route.params?.taskCompleted;
+    return (
         <View style={styles.container}>
             <ImageBackground
                 source={require('../assets/fondo_profile.jpg')}
                 style={styles.container}
                 resizeMode="cover" // Se adapta perfectamente
             >
-                <ProfileCard
-                    name="Enzo"
-                    role="Programador"
-                    imagen="https://www.kindpng.com/picc/m/363-3638766_transparent-crash-bandicoot-profile-hd-png-download.png"
-                />
-                <View style={{ flexDirection: "row", margin: 10 }}>
-                    <View style={[styles.statistics, { width: 200 }]}>
-                        <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas{'\n'}creadas</Text>
-                        <Text style={[styles.nameText, { justifyContent: "center", fontSize: 20 }]}>0</Text>
-                    </View>
-                    <View style={[styles.statistics, { borderStartWidth: 3, width: 200 }]}>
-                        <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas completadas</Text>
-                        <Text style={[styles.nameText, { justifyContent: "center", fontSize: 20 }]}>0</Text>
+                <View style={styles.centerItem}>
+                    <ProfileCard
+                        name="Enzo"
+                        role="Programador"
+                        imagen="https://www.kindpng.com/picc/m/363-3638766_transparent-crash-bandicoot-profile-hd-png-download.png"
+                    />
+                    <View style={styles.centerItemRow}>
+                        <View style={[styles.statistics, { margin: 5 }]}>
+                            <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas{'\n'}creadas</Text>
+                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskCreated || 0}</Text>
+                        </View>
+                        <View style={[styles.statistics, { margin: 5 }]} >
+                            <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas{'\n'}completadas</Text>
+                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskCompleted || 0}</Text>
+                        </View>
                     </View>
                 </View>
-            </ImageBackground>
+            </ImageBackground >
         </View >
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
+        flexDirection: "column",
         justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
+    centerItem: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: "center",
+        textAlign: "center"
+    },
+    centerItemRow: {
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: "center",
+        textAlign: "center"
     },
     statistics: {
         flexDirection: "column",
-        padding: 10
+        padding: 5,
+        flex: 1
     },
     nameText: {
         fontSize: 30,
         fontWeight: "bold",
-        textAlign: "center"
+        textAlign: "center",
     },
+    avatar: {
+        height: 110,
+        width: 110,
+        justifyContent: "center",
+        alignItems: "center", 
+        borderRadius: 25,
+        borderWidth: 10,
+    },
+    roleText: {
+        fontSize: 20,
+        textAlign: "center"
+    }
 });

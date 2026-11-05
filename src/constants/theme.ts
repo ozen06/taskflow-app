@@ -5,7 +5,7 @@ export interface ThemeColors {
 }
 
 export const lightTheme: ThemeColors = {
-    background: '#4338CA',
-    text: '#FFFFFF',
+    background: '#fafafa',
+    text: '#141414',
     border: '#9b9b9b'
 };

@@ -8,6 +8,7 @@ import {
     FlatList
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import { lightTheme } from '../constants/theme';
 
 export interface TaskListProps2 {
     type: string;
@@ -17,7 +18,8 @@ export interface TaskListProps2 {
     setTaskCompleted: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>
 }
 
-export default function TaskList({ TaskList, setTaskList, taskCompleted, setTaskCompleted, type }: TaskListProps2 & any) {
+
+export default function TaskList({ TaskList, taskCompleted, setTaskList, setTaskCompleted, type }: TaskListProps2 & any) {
     const [select, setSelect] = useState("");
     let Array = type == "TaskList" ? TaskList : taskCompleted
     let setArray = type == "TaskList" ? setTaskList : setTaskCompleted
@@ -51,7 +53,7 @@ export default function TaskList({ TaskList, setTaskList, taskCompleted, setTask
             keyExtractor={(item) => item.createdAt}
             ListHeaderComponent={
                 <View>
-                    <Text style={{ fontSize: 35, paddingLeft: 10, color: "#fff" }}>{type == "TaskList" ? "Mis tareas" : "Tareas completadas"}</Text>
+                    <Text style={{ fontSize: 35, paddingLeft: 10, margin: 5, color: lightTheme.text }}>{type == "TaskList" ? "Mis tareas" : "Tareas completadas"}</Text>
                 </View >
             }
             renderItem={({ item }) => (
@@ -85,7 +87,7 @@ export default function TaskList({ TaskList, setTaskList, taskCompleted, setTask
                             {item.active == true ? <Text style={styles.title}>{item.description}</Text> : ""}
                             <View style={[styles.rowBeetween, { margin: 10 }]}>
                                 <View style={{ justifyContent: "flex-start", padding: 5 }}>
-                                    <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[0].substring(1)}</Text>
+                                    <Text style={styles.subTitle}>{JSON.stringify(item.createdAt).split("T")[0].substring(3)}</Text>
                                 </View>
                                 <Text style={[styles.subTitle, { backgroundColor: "#d0d0d19f", borderColor: "#d0d0d19f", borderWidth: 3, borderRadius: 6 }]}>{item.category}</Text>
                             </View>
@@ -113,14 +115,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: "left",
-        color: "#0f0000"
+        color: lightTheme.text
     },
     subTitle: {
         fontSize: 17,
         fontWeight: 'bold',
         textAlign: 'center',
         justifyContent: "flex-start",
-        color: "#0f0000"
+        color: lightTheme.text
     },
     item: {
         padding: 5,

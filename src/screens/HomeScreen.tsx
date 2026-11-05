@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { lightTheme } from '../constants/theme';
 import TaskScreen from './TaskScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   welcomeText: {
     color: "#070606",
     fontSize: 32,
-    backgroundColor: "#fff",
+    backgroundColor: lightTheme.border,
     padding: 10,
     borderRadius: 10,
   },
@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 40,
+    borderWidth: 3,
+    borderColor: lightTheme.border
   },
   titulos: {
     color: lightTheme.text,
