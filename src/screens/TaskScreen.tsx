@@ -1,28 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
-import TaskCreate, { Task } from '../components/TaskCreate';
+import TaskCreate from '../components/TaskCreate';
 import TaskList from '../components/TaskList';
 import { lightTheme } from '../constants/theme';
 const { width } = Dimensions.get('window');
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TasksStackParamList } from '../navigation/TasksStack';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
 
 type TypesEmpty = {
     textEmpty: string;
 }
-type NavigationProp = NativeStackNavigationProp<TasksStackParamList>;
 
 export default function TaskScreen() {
     const [modalVisible, setModalVisible] = useState(false);
-    const [taskList, setTaskList] = useState<Task[]>([]);
-    const [taskCompleted, setCompleted] = useState<Task[]>([]);
-    const navigation = useNavigation<NavigationProp>();
-    useEffect(() => {
-        if (taskList.length >= 0) {
-            navigation.navigate("ProfileTab", { taskCreated: (taskList.length || 0), taskCompleted: (taskCompleted.length || 0) })
-        }
-    }, [taskList.length]);
+    const taskList = useSelector((state: RootState) => state.tasks.taskList);
+    const taskCompleted = taskList.filter((element) => element.completed)
     return (
         < View >
             <TouchableOpacity
@@ -32,10 +24,10 @@ export default function TaskScreen() {
                 <Text style={[styles.buttonCreate, { justifyContent: "center" }]}>{modalVisible == false ? "+" : "Atras"} </Text>
             </TouchableOpacity>
             <View style={styles.container} >
-                {modalVisible == true ? <TaskCreate setTaskList={setTaskList} taskList={taskList} /> : taskList.length > 0 ? <TaskList setTaskList={setTaskList} TaskList={taskList} taskCompleted={taskCompleted} setTaskCompleted={setCompleted} type={"TaskList"} /> : <EmptyTask textEmpty={"No hay tareas, Crea una."} />}
+                {modalVisible == true ? <TaskCreate /> : taskList.length > 0 ? <TaskList type={"TaskList"} /> : <EmptyTask textEmpty={"No hay tareas, Crea una."} />}
             </View >
             <View style={[styles.container, { marginTop: 15 }]}>
-                {modalVisible == true ? "" : taskCompleted.length > 0 ? <TaskList setTaskList={setTaskList} TaskList={taskList} taskCompleted={taskCompleted} setTaskCompleted={setCompleted} type={"TaskListCompleted"} /> : <EmptyTask textEmpty={"Todavia no hay tareas completadas!"} />}
+                {modalVisible == true ? "" : taskCompleted.length > 0 ? <TaskList type={"TaskListCompleted"} /> : <EmptyTask textEmpty={"Todavia no hay tareas completadas!"} />}
             </View >
         </View >
     );

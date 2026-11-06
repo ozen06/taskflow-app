@@ -9,48 +9,31 @@ import {
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { lightTheme } from '../constants/theme';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
+import { toggleTaskCompleted, toggleTaskDescription, useAppDispatch, deleteTask } from '../store/store';
 
 export interface TaskListProps2 {
     type: string;
-    TaskList: (Task & { createdAt: Date, active: boolean })[];
-    setTaskList: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>;
-    taskCompleted: (Task & { createdAt: Date, active: boolean })[];
-    setTaskCompleted: React.Dispatch<React.SetStateAction<(Task & { createdAt: Date, active: boolean })[]>>
 }
 
 
-export default function TaskList({ TaskList, taskCompleted, setTaskList, setTaskCompleted, type }: TaskListProps2 & any) {
+export default function TaskList({ type }: TaskListProps2 & any) {
     const [select, setSelect] = useState("");
-    let Array = type == "TaskList" ? TaskList : taskCompleted
-    let setArray = type == "TaskList" ? setTaskList : setTaskCompleted
+    const taskList = useSelector((state: RootState) => state.tasks.taskList);
+    const taskListInCompleted = taskList.filter((element) => element.completed == false)
+    const taskCompleted = taskList.filter((element) => element.completed)
+    const Array = type == "TaskList" ? taskListInCompleted : taskCompleted;
+    const dispatch = useAppDispatch()
     const taskCompletedFunction = (item: any) => {
-        const ArrayAdd = type == "TaskList" ? taskCompleted : TaskList
-        let ArrayDelete = type == "TaskList" ? TaskList : taskCompleted;
-        let setArrayAdd = type == "TaskList" ? setTaskCompleted : setTaskList
-        let setArrayDelete = type == "TaskList" ? setTaskList : setTaskCompleted
-        const search = ArrayAdd.find((elemento: any) => elemento.title == item.title)
-        if (search) {
-            return
-        } else {
-            setArrayAdd((prevstate: any) => {
-                return [...prevstate, item]
-            });
-            const search = ArrayDelete.find((elemento: any) => elemento.title == item.title)
-            if (search) {
-                setArrayDelete((prevstate: any) => {
-                    return prevstate.filter((element: any) => element.title !== item.title)
-                });
-            } else {
-                return
-            }
-        }
+        dispatch(toggleTaskCompleted(item.id)) 
     }
 
     return (
         <FlatList
             style={{ height: 415 }}
             data={Array}
-            keyExtractor={(item) => item.createdAt}
+            keyExtractor={(item) => item.id.toString()}
             ListHeaderComponent={
                 <View>
                     <Text style={{ fontSize: 35, paddingLeft: 10, margin: 5, color: lightTheme.text }}>{type == "TaskList" ? "Mis tareas" : "Tareas completadas"}</Text>
@@ -59,22 +42,7 @@ export default function TaskList({ TaskList, taskCompleted, setTaskList, setTask
             renderItem={({ item }) => (
                 <TouchableOpacity
                     style={[styles.item, styles.rowCenter, { borderColor: item.colorCategory, borderStartWidth: 8, height: "auto", margin: 15 }, select !== "" ? item.active == false ? { opacity: 0.3 } : "" : ""]}
-                    onPress={() => setArray((prevstate: any) => {
-                        return prevstate.map((elemento: any) => {
-                            if (select == "" || select == item.taskName) {
-                                if (elemento === item) {
-                                    if (elemento.active == false) {
-                                        setSelect(item.taskName)
-                                        return { ...elemento, active: !elemento.active };
-                                    } else if (elemento.active == true) {
-                                        setSelect("")
-                                        return { ...elemento, active: !elemento.active };
-                                    }
-                                }
-                            }
-                            return elemento;
-                        })
-                    })}
+                    onPress={() => dispatch(toggleTaskDescription(item.id))}
                 >
                     <View style={styles.rowCenter}>
                         <TouchableOpacity onPress={() => taskCompletedFunction(item)}>

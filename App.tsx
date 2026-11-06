@@ -1,10 +1,13 @@
 import AppNavigator from "./src/navigation/AppNavigator";
-import HomeScreen from "./src/screens/HomeScreen";
-import { View, StyleSheet } from "react-native";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store";
+import { StyleSheet } from "react-native";
 
 export default function App() {
   return (
-    <AppNavigator />
+    <Provider store={store}>
+      <AppNavigator />
+    </Provider>
   );
 }
 

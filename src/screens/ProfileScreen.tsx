@@ -3,13 +3,16 @@ import { ImageBackground } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TasksStackParamList } from '../navigation/TasksStack';
 import ProfileCard from '../components/ProfileCard'; 
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
 
 type RouterProp = RouteProp<TasksStackParamList>;
 
 export default function ProfileScreen() {
-    const route = useRoute<RouterProp>();
-    const taskCreated = route.params?.taskCreated;
-    const taskCompleted = route.params?.taskCompleted;
+    const taskList = useSelector((state: RootState) => state.tasks.taskList);
+    const taskListInCompleted = taskList.filter((element) => element.completed == false)
+    const taskCompleted = taskList.filter((element) => element.completed)
+    const route = useRoute<RouterProp>(); 
     return (
         <View style={styles.container}>
             <ImageBackground
@@ -26,11 +29,11 @@ export default function ProfileScreen() {
                     <View style={styles.centerItemRow}>
                         <View style={[styles.statistics, { margin: 5 }]}>
                             <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas{'\n'}creadas</Text>
-                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskCreated || 0}</Text>
+                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskListInCompleted.length || 0}</Text>
                         </View>
                         <View style={[styles.statistics, { margin: 5 }]} >
                             <Text style={[styles.nameText, { fontSize: 20 }]}>Tareas{'\n'}completadas</Text>
-                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskCompleted || 0}</Text>
+                            <Text style={[styles.nameText, { justifyContent: "center", fontSize: 18 }]}>{taskCompleted.length || 0}</Text>
                         </View>
                     </View>
                 </View>

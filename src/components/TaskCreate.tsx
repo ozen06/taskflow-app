@@ -2,16 +2,20 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Alert, Pressable, ScrollView } from 'react-native';
 import { lightTheme } from '../constants/theme';
 const { width } = Dimensions.get('window');
-
+import { useAppDispatch } from '../store/store';
+import { addTask, setColorCategory } from '../store/store';
 
 export interface Task {
     id: number;
     title: string;
     description: string;
     category: string;
-    createdAt: Date;
+    createdAt: string;
     active: boolean;
+    completed: boolean;
+    colorCategory?: string;
 }
+
 interface Focused {
     title: boolean;
     description: boolean;
@@ -24,13 +28,14 @@ export interface TaskListProps {
 let i = 0;
 
 
-export default function TaskCreate({ setTaskList, taskList }: TaskListProps) {
+export default function TaskCreate() {
     const options = ["Personal", "Hogar"];
     const date = new Date()
-    const [onChangeText, setOnChangeText] = useState<Task>({ id: 0, title: "", description: "", category: options[0], createdAt: date, active: false });
+    const [onChangeText, setOnChangeText] = useState<Task>({ id: 0, title: "", description: "", category: options[0], createdAt: "", active: false, completed: false });
     const [errorTitle, setErrorTitle] = useState(false);
     const [errorDescription, setErrorDescription] = useState(false);
     const [titleFocused, setTitleFocused] = useState<Focused>({ title: false, description: false });
+    const dispatch = useAppDispatch();
 
     const validateForm = () => {
         const conditionTrueDescription = onChangeText.description.length >= 10
@@ -54,31 +59,16 @@ export default function TaskCreate({ setTaskList, taskList }: TaskListProps) {
     const handleAddTask = () => {
         const validation = validateForm()
         if (validation == true) {
-            let taskCopy = { ...onChangeText, createdAt: new Date(), active: false, id: i };
+            let taskCopy = { ...onChangeText, createdAt: new Date().toDateString(), active: false, id: i };
+            dispatch(addTask(taskCopy))
             i += 1;
-            setTaskList((prevstate: any) => [...(prevstate || []), taskCopy])
             const types = ["title", "description"]
             Alert.alert("Tarea creada con exito")
             for (let i = 0; i < types.length; i++) {
                 onChangeTextFunc(types[i], "")
             }
             const colors = ["#FF5733", "#33FF57", "#3357FF", "#F3FF33", "#FF33F3"];
-            for (let i = 0; i < taskList.length; i++) {
-                setTaskList((prevState: any) =>
-                    prevState.map((task: any) => {
-                        // Borro todas las tareas que estan detalladas
-                        if (task.active == true) {
-                            return { ...task, active: !task.active };
-                        }
-                        if (task.category === "Personal") {
-                            return { ...task, colorCategory: colors[0] };
-                        } else if (task.category === "Hogar") {
-                            return { ...task, colorCategory: colors[1] };
-                        }
-                        return task;
-                    })
-                );
-            }
+            dispatch(setColorCategory(colors))
         }
     }
 
